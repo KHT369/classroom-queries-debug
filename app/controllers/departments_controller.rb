@@ -7,7 +7,7 @@ class DepartmentsController < ApplicationController
 
   def show
     the_id = params.fetch("path_id")
-    @department = Department.where({:id => the_id })
+    @department = Department.find(the_id)
 
     render({ :template => "departments/show" })
   end
@@ -26,7 +26,7 @@ class DepartmentsController < ApplicationController
 
   def update
     the_id = params.fetch("path_id")
-    @department = Department.where({ :id => the_id }).at(0)
+    @department = Department.find(the_id)
 
     @department.name = params.fetch("query_name")
 
@@ -40,7 +40,7 @@ class DepartmentsController < ApplicationController
 
   def destroy
     the_id = params.fetch("path_id")
-    @department = Department.where({ :id => the_id }).at(0)
+    @department = Department.find(the_id)
 
     @department.destroy
 
