@@ -1,13 +1,14 @@
 class CoursesController < ApplicationController
+  
   def index
-    @courses = Course.all.order({ :created_at => :desc })
+    @courses = Course.includes(:department).order(created_at: :desc)
 
     render({ :template => "courses/index" })
   end
 
   def show
     the_id = params.fetch("path_id")
-    @course = Course.where({:id => the_id }).at(0)
+    @course = Course.find(the_id)
 
     render({ :template => "courses/show" })
   end
@@ -15,7 +16,7 @@ class CoursesController < ApplicationController
   def create
     @course = Course.new
     @course.title = params.fetch("query_title")
-    @course.term_offered = params.fetch("query_term_")
+    @course.term_offered = params.fetch("query_term")
     @course.department_id = params.fetch("query_department_id")
 
     if @course.valid?
@@ -27,8 +28,8 @@ class CoursesController < ApplicationController
   end
 
   def update
-    id = params.fetch("path_id")
-    @course = Course.where({ :id => the_id }).at(0)
+    the_id = params.fetch("path_id")
+    @course = Course.find(the_id)
 
     @course.title = params.fetch("query_title")
     @course.term_offered = params.fetch("query_term_offered")
@@ -43,9 +44,8 @@ class CoursesController < ApplicationController
   end
 
   def destroy
-    the_id = params.fetch("path")
-    @course = Course.where({ :id => the_id }).at(0)
-
+    the_id = params.fetch("path_id")
+    @course = Course.find(the_id)
     @course.destroy
 
     redirect_to("/courses", { :notice => "Course deleted successfully."} )
